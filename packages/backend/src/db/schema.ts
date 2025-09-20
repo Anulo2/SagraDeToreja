@@ -63,7 +63,7 @@ export const menuItem = pgTable("menu_item", {
 // Tavoli disponibili per un evento (configurazione della sala)
 // Ogni evento può avere una disposizione diversa dei tavoli
 // Più comande pinzate possono essere assegnate allo stesso tavolo in momenti diversi
-export const table = pgTable("table", {
+export const eventTable = pgTable("table", {
   id: serial("id").primaryKey(),
   tableNumber: text("table_number").notNull(), // numero/nome del tavolo (es: "1", "A3", "Terrazza-5")
   eventId: serial("event_id").references(() => event.id),
@@ -138,7 +138,7 @@ export const order = pgTable("order", {
   isPinned: boolean("is_pinned").default(false).notNull(), // true quando è stato raggruppato in una pinnedOrder, può essere messo direttamebte a true quando è tipo per il caffè e non serve pinzare la comanda
   // in quanto ci sarà una persona in sala con una cassa "mobile" che raccoglierà ordini come caffè, amaro, dolce ecc e la comanda verrà stampata direttamente al bar, e quando verrà servita
   // verrà lasciato al cliente lo scontrino fiscale (che corrisponde anche alla comanda in questo caso)
-  tableId: serial("table_id").references(() => table.id), // da usare solo in caso di cassa mobile per l'ordine al tavolo che non ha bisogno di essere pinzato
+  tableId: serial("table_id").references(() => eventTable.id), // da usare solo in caso di cassa mobile per l'ordine al tavolo che non ha bisogno di essere pinzato
   createdAt: timestamp("created_at")
     .$defaultFn(() => new Date())
     .notNull(),
@@ -177,7 +177,7 @@ export const orderItemVariation = pgTable("order_item_variation", {
 export const pinnedOrder = pgTable("pinned_order", {
   id: serial("id").primaryKey(),
   pinnedOrderNumber: text("pinned_order_number").notNull().unique(), // numero visibile allo staff (es: "T05-1", "T05-2" per multiple comande)
-  tableId: serial("table_id").references(() => table.id), // riferimento al tavolo configurato
+  tableId: serial("table_id").references(() => eventTable.id), // riferimento al tavolo configurato
   customerName: text("customer_name").notNull(), // nome di riferimento (preso dal primo ordine della pinzatura)
   totalCovers: serial("total_covers").notNull(), // coperti totali = somma dei covers di tutti gli ordini pinzati
   totalAmount: numeric("total_amount", { precision: 10, scale: 2 }).notNull(), // importo totale = somma di tutti gli ordini pinzati

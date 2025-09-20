@@ -1,0 +1,39 @@
+services:
+  postgres:
+    image: postgres:alpine
+    container_name: postgres-db
+    restart: always
+    environment:
+      POSTGRES_DB: sagra_torreglia
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  drizzle-gateway:
+    image: ghcr.io/drizzle-team/gateway:latest
+    container_name: drizzle-gate
+    restart: always
+    ports:
+      - "4983:4983"
+    environment:
+      - PORT=4983
+      - STORE_PATH=/app
+      - MASTERPASS=your_master_password
+    volumes:
+      - ./data/drizzle-gateway:/app
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  default:
+    name: sagra_network
