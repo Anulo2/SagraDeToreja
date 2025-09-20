@@ -1,0 +1,11 @@
+{
+  "name": "sagra-de-toreja",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "devDependencies": {
+    "@biomejs/biome": "^2.2.4",
+    "ultracite": "5.3.9"
+  }
+}
