@@ -1,0 +1,5 @@
+- 2025-09-23: Integrato TanStack Router con layout principale (`src/router.tsx`, `src/layouts/RootLayout.tsx`).
+- 2025-09-23: Configurato login con Better Auth UI (`src/providers/AuthProvider.tsx`, `src/pages/LoginPage.tsx`).
+- 2025-09-23: Aggiunta pagina di registrazione con Better Auth UI (`src/pages/SignupPage.tsx`, `/signup`).
+- 2025-09-23: Inseriti menù utente e selettore parrocchia nell'header (`src/layouts/RootLayout.tsx`).
+- 2025-09-23: Mappati tutti i percorsi Better Auth UI (auth/account/organization) in TanStack Router con risoluzione dinamica (`src/router.tsx`, `src/pages/AuthViewPage.tsx`, `src/pages/AccountViewPage.tsx`, `src/pages/OrganizationViewPage.tsx`, `src/lib/viewPaths.ts`).

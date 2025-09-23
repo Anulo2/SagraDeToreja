@@ -9,6 +9,15 @@
   },
   "linter": {
     "rules": {
+      "nursery": {
+        "useImageSize": "off"
+      },
+      "performance": {
+        "noImgElement": "off"
+      },
+      "suspicious": {
+        "noConsole": "off"
+      },
       "style": {
         "noNonNullAssertion": "off",
         "useFilenamingConvention": "off",

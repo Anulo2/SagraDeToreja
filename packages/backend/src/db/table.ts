@@ -1,6 +1,33 @@
-import { verification, user, session, account, organization, member, invitation } from "./auth-schema";
-import { event, menu, menuItem, eventTable, ingredient, menuItemIngredient, variation, order, orderItem, orderItemVariation, pinnedOrder, pinnedOrderItem } from "./schema";
-
+import {
+  account,
+  invitation,
+  member,
+  organization,
+  session,
+  user,
+  verification,
+} from "./auth-schema";
+import {
+  eventRelations,
+  menuRelations,
+  orderRelations,
+  sessionRelations,
+  userRelations,
+} from "./relations";
+import {
+  event,
+  eventTable,
+  ingredient,
+  menu,
+  menuItem,
+  menuItemIngredient,
+  order,
+  orderItem,
+  orderItemVariation,
+  pinnedOrder,
+  pinnedOrderItem,
+  variation,
+} from "./schema";
 
 export const table = {
   user,
@@ -21,10 +48,12 @@ export const table = {
   orderItem,
   orderItemVariation,
   pinnedOrder,
-  pinnedOrderItem
-} as const
+  pinnedOrderItem,
+  eventRelations,
+  menuRelations,
+  orderRelations,
+  userRelations,
+  sessionRelations,
+} as const;
 
-export * from "./auth-schema"
-export * from "./schema"
-
-export type Table = typeof table
+export type Table = typeof table;

@@ -1,4 +1,13 @@
-import { pgTable, serial, text, numeric, boolean, timestamp, integer } from "drizzle-orm/pg-core";
+import {
+  boolean,
+  date,
+  integer,
+  numeric,
+  pgTable,
+  serial,
+  text,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { organization, user } from "./auth-schema";
 
 // Evento della sagra (es: "Sagra di Settembre 2024")
@@ -9,14 +18,14 @@ export const event = pgTable("event", {
   description: text("description"),
   organizationId: text("organization_id").references(() => organization.id),
   authorId: text("author_id").references(() => user.id),
-  startDate: timestamp("start_date"),
-  endDate: timestamp("end_date"),
+  startDate: date("start_date", { mode: "date" }).notNull(),
+  endDate: date("end_date", { mode: "date" }).notNull(),
   isActive: boolean("is_active").default(true).notNull(),
-  createdAt: timestamp("created_at")
-    .$defaultFn(() => new Date())
+  createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+    .defaultNow()
     .notNull(),
-  updatedAt: timestamp("updated_at")
-    .$defaultFn(() => new Date())
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
+    .defaultNow()
     .$onUpdate(() => new Date())
     .notNull(),
 });
@@ -101,7 +110,9 @@ export const menuItemIngredient = pgTable("menu_item_ingredient", {
   id: serial("id").primaryKey(),
   menuItemId: serial("menu_item_id").references(() => menuItem.id),
   ingredientId: serial("ingredient_id").references(() => ingredient.id),
-  quantity: numeric("quantity", { precision: 10, scale: 2 }).default("1").notNull(),
+  quantity: numeric("quantity", { precision: 10, scale: 2 })
+    .default("1")
+    .notNull(),
   unit: text("unit").default("pz").notNull(), // es: "pz", "gr", "ml"
 });
 
@@ -116,7 +127,9 @@ export const variation = pgTable("variation", {
   menuItemId: serial("menu_item_id").references(() => menuItem.id),
   ingredientId: serial("ingredient_id").references(() => ingredient.id),
   price: numeric("price", { precision: 10, scale: 2 }).notNull(), // può essere negativo per rimozioni
-  quantity: numeric("quantity", { precision: 10, scale: 2 }).default("1").notNull(),
+  quantity: numeric("quantity", { precision: 10, scale: 2 })
+    .default("1")
+    .notNull(),
   unit: text("unit").default("pz").notNull(),
   variationType: text("variation_type").notNull(), // "add" o "remove"
   isAvailable: boolean("is_available").default(true).notNull(),
@@ -134,7 +147,7 @@ export const order = pgTable("order", {
   menuId: serial("menu_id").references(() => menu.id),
   totalAmount: numeric("total_amount", { precision: 10, scale: 2 }).notNull(),
   customerName: text("customer_name"), // nome del cliente (obbligatorio se userId è null)
-  covers: serial("covers").default(1), // quante persone copre questo ordine, se è un ordine fatto successivamente non c'è bisogno di nuovo del coperto! Tipo il caffè o l'amaro
+  covers: integer("covers").default(1), // quante persone copre questo ordine, se è un ordine fatto successivamente non c'è bisogno di nuovo del coperto! Tipo il caffè o l'amaro
   isPinned: boolean("is_pinned").default(false).notNull(), // true quando è stato raggruppato in una pinnedOrder, può essere messo direttamebte a true quando è tipo per il caffè e non serve pinzare la comanda
   // in quanto ci sarà una persona in sala con una cassa "mobile" che raccoglierà ordini come caffè, amaro, dolce ecc e la comanda verrà stampata direttamente al bar, e quando verrà servita
   // verrà lasciato al cliente lo scontrino fiscale (che corrisponde anche alla comanda in questo caso)
